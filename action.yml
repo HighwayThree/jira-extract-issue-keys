@@ -1,4 +1,4 @@
-name: 'Jira Extract Keys From Commit'
+name: 'Jira Extract Issue Keys'
 description: 'Github Action to extract jira keys from commit messages and output in comma delimited format.  This action
               was created to be used with jira-upload-build-info Github Action'
 inputs:
