@@ -1,0 +1,26 @@
+{
+  "name": "jira-extract-issue-keys",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HighwayThree/jira-extract-issue-keys.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HighwayThree/jira-extract-issue-keys/issues"
+  },
+  "homepage": "https://github.com/HighwayThree/jira-extract-issue-keys#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.1",
+    "@actions/github": "^2.0.1",
+    "@octokit/rest": "^16.40.0",
+    "match-all": "^1.2.5"
+  }
+}
