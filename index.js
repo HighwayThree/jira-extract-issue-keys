@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const core = require('@actions/core');
 const github = require('@actions/github');
 const matchAll = require("match-all");
@@ -96,3 +97,4 @@ async function extractJiraKeysFromCommit() {
     await extractJiraKeysFromCommit();
     console.log("finished extracting jira keys from commit message");
 })();
+exports.default = extractJiraKeysFromCommit;

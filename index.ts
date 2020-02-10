@@ -109,3 +109,5 @@ async function extractJiraKeysFromCommit() {
     await extractJiraKeysFromCommit();
     console.log("finished extracting jira keys from commit message");
 })();
+
+export default extractJiraKeysFromCommit
