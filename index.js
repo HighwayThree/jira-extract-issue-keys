@@ -6,7 +6,6 @@ const Octokit = require("@octokit/rest");
 async function extractJiraKeysFromCommit() {
     try {
         const regex = /([A-Z]+-\d+)/g;
-        // console.log("core.getInput('is-pull-request'): " + core.getInput('is-pull-request'));
         const isPullRequest = core.getInput('is-pull-request') == 'true';
         console.log("isPullRequest: " + isPullRequest);
         const commitMessage = core.getInput('commit-message');
@@ -14,10 +13,7 @@ async function extractJiraKeysFromCommit() {
         console.log("core.getInput('parse-all-commits'): " + core.getInput('parse-all-commits'));
         const parseAllCommits = core.getInput('parse-all-commits') == 'true';
         console.log("parseAllCommits: " + parseAllCommits);
-        // const jsonPayload = JSON.stringify(github.context.payload, undefined, 2);
-        // console.log("github context json payload: ", jsonPayload);
         const payload = github.context.payload;
-        // console.log("github: ", github);
         const token = process.env['GITHUB_TOKEN'];
         console.log("github token: " + token);
         const octokit = new Octokit({
@@ -26,9 +22,6 @@ async function extractJiraKeysFromCommit() {
         if (isPullRequest) {
             let resultArr = [];
             console.log("is pull request...");
-            // console.log("payload.repository.owner.login: " + payload.repository.owner.login);
-            // console.log("payload.repository.name: " + payload.repository.name);
-            // console.log("payload.number: " + payload.number);
             const owner = payload.repository.owner.login;
             const repo = payload.repository.name;
             const prNum = payload.number;
@@ -37,9 +30,7 @@ async function extractJiraKeysFromCommit() {
                 repo: repo,
                 pull_number: prNum
             });
-            // console.log("commits: ", data);
             data.forEach((item) => {
-                // console.log("commit: ", item.commit.message);
                 const commit = item.commit;
                 const matches = matchAll(commit.message, regex).toArray();
                 matches.forEach((match) => {
@@ -67,14 +58,11 @@ async function extractJiraKeysFromCommit() {
             }
             else {
                 console.log("no commit-message input val provided...");
-                // const jsonPayload = JSON.stringify(github.context.payload, undefined, 2);
-                // console.log("github context json payload: ", jsonPayload);
                 const payload = github.context.payload;
                 if (parseAllCommits) {
                     console.log("parse-all-commits input val is true");
                     let resultArr = [];
                     payload.commits.forEach((commit) => {
-                        // console.log("commit: ", commit);
                         const matches = matchAll(commit.message, regex).toArray();
                         matches.forEach((match) => {
                             if (resultArr.find((element) => element == match)) {
