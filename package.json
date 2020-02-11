@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": "tsc --noEmit && jest"
+    "test": "tsc --noEmit && jest",
+    "test_no_console_log": "tsc --noEmit && jest --silent"
   },
   "repository": {
     "type": "git",
