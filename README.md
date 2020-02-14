@@ -2,6 +2,12 @@
 
 This Github Action parses all the possible issue keys from the commit message.
 
+## Requirements
+
+Issue keys must use capital letters and must have a dash ('-') between the letters and digits. There should be no spaces between the characters of an issue key.
+
+Example: `EXAMPLE-123 Th1s 1s a commit-1` the only issue key is EXAMPLE-123
+
 ## Action Specifications
 
 ### Input values
