@@ -29,9 +29,9 @@ For more information on Github Environment Variables, see https://help.github.co
 
 ```
 uses: HighwayThree/jira-extract-issue-keys@master
-      with:
-        is-pull-request: ${{ github.event_name == 'pull_request' }}
-        parse-all-commits: ${{ github.event_name == 'push' }}
+with:
+    is-pull-request: ${{ github.event_name == 'pull_request' }}
+    parse-all-commits: ${{ github.event_name == 'push' }}
 ```
 
 - `is-pull-request` - is true if the GitHub event is a pull request
