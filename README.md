@@ -44,5 +44,5 @@ with:
 
 ## Usage
 
-An example of a pipeline using this actino can be found at: 
+An example of a pipeline using this action can be found at: 
 > https://github.com/HighwayThree/jira-github-action-integration-demo/blob/master/.github/workflows/ci.yml
