@@ -14,7 +14,7 @@ Example: `EXAMPLE-123 TH-1S 1s a commit-1` the only issue key is EXAMPLE-123
 
 #### Required
 
-Inside your .yml file there should be something that looks like these required variables:
+Inside your .yml file there should be something that looks like this required variable:
 
 ###### Environment variables
 
@@ -25,17 +25,19 @@ env:
 
 For more information on Github Environment Variables, see https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables#default-environment-variables
 
-###### Job specific variables
+###### Optional variables
 
 ```
 uses: HighwayThree/jira-extract-issue-keys@master
 with:
     is-pull-request: ${{ github.event_name == 'pull_request' }}
     parse-all-commits: ${{ github.event_name == 'push' }}
+    commit-message: 'EXAMPLE-1 message'
 ```
 
 - `is-pull-request` - is true if the GitHub event is a pull request
 - `parse-all-commits` - is true if the GitHub event is a push
+- `commit-message` - commit message to be parsed for jira keys
 
 ### Output value
 
