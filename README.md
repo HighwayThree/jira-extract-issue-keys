@@ -35,9 +35,9 @@ with:
     commit-message: 'EXAMPLE-1 message'
 ```
 
-- `is-pull-request` - is true if the GitHub event is a pull request
-- `parse-all-commits` - is true if the GitHub event is a push
-- `commit-message` - commit message to be parsed for jira keys
+- `is-pull-request` - is true if the GitHub event is a pull request.
+- `parse-all-commits` - is true if the GitHub event is a push.
+- `commit-message` - commit message to be parsed for jira keys. If it is hardcoded like the example above, the smart commits do not send commit information to the hardcoded Jira issues. The default is the commit message, where the smart commits do send information to the issue keys found in the user's commit message.
 
 ### Output value
 
