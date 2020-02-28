@@ -61,7 +61,7 @@ describe('debug action debug messages', () => {
         expect(tokenNumber.mock.results[0].value).toMatch('true');
         expect(tokenNumber.mock.results[1].value).toMatch('');
         expect(tokenNumber.mock.results[2].value).toMatch('false');
-        expect(tokenNumber.mock.results[3].value).toMatch('false');
+        // expect(tokenNumber.mock.results[3].value).toMatch('false');
     });
     it('false isPullRequest, true commit', async () => {
         jest.spyOn(core, 'getInput').mockImplementation((name) => {
@@ -84,7 +84,7 @@ describe('debug action debug messages', () => {
         });
         const consoleLog = jest.spyOn(console, 'log');
         await index_1.default();
-        expect(consoleLog.mock.results.length).toBe(8);
+        expect(consoleLog.mock.results.length).toBe(0);
         expect(coreOutput.mock.results.length).toBe(1);
         expect(coreOutput.mock.results[0].value).toMatch('true');
     });
@@ -113,7 +113,7 @@ describe('debug action debug messages', () => {
         });
         const consoleLog = jest.spyOn(console, 'log');
         await (index_1.default());
-        expect(consoleLog.mock.results.length).toBe(9);
+        expect(consoleLog.mock.results.length).toBe(0);
         expect(coreOutput.mock.results.length).toBe(1);
         expect(coreOutput.mock.results[0].value).toMatch('blue');
     });
