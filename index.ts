@@ -5,7 +5,7 @@ const Octokit = require("@octokit/rest");
 
 async function extractJiraKeysFromCommit() {
     try {
-        const regex = /([A-Z]+-\d+)/g;
+        const regex = /((([A-Z]+)|([0-9]+))+-\d+)/g;
         const isPullRequest = core.getInput('is-pull-request') == 'true';
         // console.log("isPullRequest: " + isPullRequest);
         const commitMessage = core.getInput('commit-message');
@@ -20,7 +20,7 @@ async function extractJiraKeysFromCommit() {
             auth: token,
         });
 
-        if(isPullRequest) {
+        if (isPullRequest) {
             let resultArr: any = [];
 
             // console.log("is pull request...");
@@ -39,7 +39,7 @@ async function extractJiraKeysFromCommit() {
                 const commit = item.commit;
                 const matches: any = matchAll(commit.message, regex).toArray();
                 matches.forEach((match: any) => {
-                    if(resultArr.find((element:any) => element == match)) {
+                    if (resultArr.find((element: any) => element == match)) {
                         // console.log(match + " is already included in result array");
                     } else {
                         // console.log(" adding " + match + " to result array");
@@ -55,7 +55,7 @@ async function extractJiraKeysFromCommit() {
         else {
             // console.log("not a pull request");
 
-            if(commitMessage) {
+            if (commitMessage) {
                 // console.log("commit-message input val provided...");
                 const matches = matchAll(commitMessage, regex).toArray();
                 const result = matches.join(',');
@@ -65,14 +65,14 @@ async function extractJiraKeysFromCommit() {
                 // console.log("no commit-message input val provided...");
                 const payload = github.context.payload;
 
-                if(parseAllCommits) {
+                if (parseAllCommits) {
                     // console.log("parse-all-commits input val is true");
                     let resultArr: any = [];
 
                     payload.commits.forEach((commit: any) => {
                         const matches = matchAll(commit.message, regex).toArray();
                         matches.forEach((match: any) => {
-                            if(resultArr.find((element: any) => element == match)) {
+                            if (resultArr.find((element: any) => element == match)) {
                                 // console.log(match + " is already included in result array");
                             } else {
                                 // console.log(" adding " + match + " to result array");
