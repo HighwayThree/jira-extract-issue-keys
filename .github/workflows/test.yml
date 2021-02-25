@@ -1,0 +1,21 @@
+name: Node.js CI
+
+on: 
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Parse Jira Keys from All Commits
+      id: jira_keys
+      uses: eirikeikaas/jira-extract-issue-keys@master
+      with:
+        is-pull-request: ${{ github.event_name == 'pull_request' }}
+        parse-all-commits: ${{ github.event_name == 'push' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Dump
+      run: echo "${{ steps.jira_keys.outputs.keys }}"
