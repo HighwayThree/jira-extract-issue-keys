@@ -48,6 +48,24 @@ async function extractJiraKeysFromCommit() {
                 });
 
             });
+            
+            const { title } = await ctokit.pulls.get({
+                owner: owner,
+                repo: repo,
+                pull_number: prNum
+            });
+            
+            if (title.match(regex)) {
+                const matches: any = matchAll(title, regex).toArray();
+                matches.forEach((match: any) => {
+                    if (resultArr.find((element: any) => element == match)) {
+                        // console.log(match + " is already included in result array");
+                    } else {
+                        // console.log(" adding " + match + " to result array");
+                        resultArr.push(match);
+                    }
+                });
+            }
 
             const result = resultArr.join(',');
             core.setOutput("jira-keys", result);
