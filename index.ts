@@ -49,14 +49,17 @@ async function extractJiraKeysFromCommit() {
 
             });
             
-            const { title } = await octokit.pulls.get({
+            const pull = await octokit.pulls.get({
                 owner: owner,
                 repo: repo,
                 pull_number: prNum
             });
+
+            console.log(pull);
+
+            const { title } = pull;
             
             if (title.match(regex)) {
-                console.log(matchAll(title, regex).toArray() + " is already included in result array");
                 const matches: any = matchAll(title, regex).toArray();
                 matches.forEach((match: any) => {
                     if (resultArr.find((element: any) => element == match)) {
