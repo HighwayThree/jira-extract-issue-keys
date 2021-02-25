@@ -49,7 +49,7 @@ async function extractJiraKeysFromCommit() {
 
             });
             
-            const { title } = await ctokit.pulls.get({
+            const { title } = await octokit.pulls.get({
                 owner: owner,
                 repo: repo,
                 pull_number: prNum
