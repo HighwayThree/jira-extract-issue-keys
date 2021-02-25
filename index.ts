@@ -56,6 +56,7 @@ async function extractJiraKeysFromCommit() {
             });
             
             if (title.match(regex)) {
+                console.log(matchAll(title, regex).toArray() + " is already included in result array");
                 const matches: any = matchAll(title, regex).toArray();
                 matches.forEach((match: any) => {
                     if (resultArr.find((element: any) => element == match)) {
@@ -68,7 +69,7 @@ async function extractJiraKeysFromCommit() {
             }
 
             const result = resultArr.join(',');
-            core.setOutput("jira-keys", result);
+            core.setOutput("keys", result);
         }
         else {
             // console.log("not a pull request");
@@ -77,7 +78,7 @@ async function extractJiraKeysFromCommit() {
                 // console.log("commit-message input val provided...");
                 const matches = matchAll(commitMessage, regex).toArray();
                 const result = matches.join(',');
-                core.setOutput("jira-keys", result);
+                core.setOutput("keys", result);
             }
             else {
                 // console.log("no commit-message input val provided...");
@@ -101,14 +102,14 @@ async function extractJiraKeysFromCommit() {
                     });
 
                     const result = resultArr.join(',');
-                    core.setOutput("jira-keys", result);
+                    core.setOutput("keys", result);
                 }
                 else {
                     // console.log("parse-all-commits input val is false");
                     // console.log("head_commit: ", payload.head_commit);
                     const matches = matchAll(payload.head_commit.message, regex).toArray();
                     const result = matches.join(',');
-                    core.setOutput("jira-keys", result);
+                    core.setOutput("keys", result);
                 }
 
             }
