@@ -55,7 +55,7 @@ async function extractJiraKeysFromCommit() {
                 pull_number: prNum
             });
 
-            console.log(pull);
+            core.info(pull);
 
             const { title } = pull;
             
