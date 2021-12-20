@@ -21,6 +21,29 @@ jobs:
       #   run: |
       #     export DEPLOY_TYPE='staging'
       #     echo "DEPLOY_TYPE=$DEPLOY_TYPE" >> $GITHUB_ENV
+      - name: Moar Vespene Gas
+        - uses: actions/checkout@v1
+        - uses: 8BitJonny/gh-get-current-pr@1.3.0
+          id: PR
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            # Verbose setting SHA when using Pull_Request event trigger to fix #16
+            sha: ${{ github.event.pull_request.head.sha }}
+            # Only return if PR is still open
+            filterOutClosed: true
+        - run: echo "Your PR is ${prNumber} and its JSON is ${prJSON}"
+          if: success() && steps.PR.outputs.number
+          env:
+            prNumber: ${{ steps.PR.outputs.number }}
+            # JSON object with the full PR object
+            prJSON: ${{ steps.PR.outputs.pr }}
+            # Direct access to common PR properties
+            prUrl: ${{ steps.PR.outputs.pr_url }}
+            prTitle: ${{ steps.PR.outputs.pr_title }}
+            prBody: ${{ steps.PR.outputs.pr_body }}
+            prCreatedAt: ${{ steps.PR.outputs.pr_created_at }}
+            prMergedAt: ${{ steps.PR.outputs.pr_merged_at }}
+            prClosedAt: ${{ steps.PR.outputs.pr_closed_at }}
       - name: Deploy to ${{env.DEPLOY_TYPE}}
         run: |
           echo "Deploying to ${{env.DEPLOY_TYPE}}..."
@@ -30,24 +53,21 @@ jobs:
           echo "github.head_ref: ${{github.head_ref}}"
           echo "github.base_ref: ${{github.base_ref}}"
           echo "DEPLOY_TYPE: ${{env.DEPLOY_TYPE}}"
-          echo "DEPLOY_STATE=successful"  >> $GITHUB_ENV
-      # - name: Failed Deployment
-      #   if: failure()
-      #   run: echo "DEPLOY_STATE=failed" >> $GITHUB_ENV
+          echo "DEPLOY_STATE=successful"  >> $GITHUB_ENV      
       - name: Parse Jira Keys from All Commits
         id: jira_keys
         if: always()
-        uses: HighwayThree/jira-extract-issue-keys@master
+        uses: birdly/jira-extract-issue-keys@testing
         with:
           is-pull-request: ${{ github.event_name == 'pull_request' }}
           parse-all-commits: ${{ github.event_name == 'push' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Confirm Deploy State and Jira Key Values
-      #   if: always()
-      #   run: |
-      #     echo "DEPLOY_STATE: ${{env.DEPLOY_STATE}}"
-      #     echo "Jira Keys: ${{steps.jira_keys.outputs.jira-keys}}"
+      - name: Confirm Deploy State and Jira Key Values
+        if: always()
+        run: |
+          echo "DEPLOY_STATE: ${{env.DEPLOY_STATE}}"
+          echo "Jira Keys: ${{steps.jira_keys.outputs.jira-keys}}"
       # - name: Push Deployment Info to Jira
       #   if: steps.jira_keys.outputs.jira-keys != ''
       #   id: push_deployment_info_to_jira
