@@ -21,29 +21,22 @@ jobs:
       #   run: |
       #     export DEPLOY_TYPE='staging'
       #     echo "DEPLOY_TYPE=$DEPLOY_TYPE" >> $GITHUB_ENV
-      - name: Moar Vespene Gas
-        - uses: actions/checkout@v1
-        - uses: 8BitJonny/gh-get-current-pr@1.3.0
-          id: PR
-          with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            # Verbose setting SHA when using Pull_Request event trigger to fix #16
-            sha: ${{ github.event.pull_request.head.sha }}
-            # Only return if PR is still open
-            filterOutClosed: true
-        - run: echo "Your PR is ${prNumber} and its JSON is ${prJSON}"
-          if: success() && steps.PR.outputs.number
-          env:
-            prNumber: ${{ steps.PR.outputs.number }}
-            # JSON object with the full PR object
-            prJSON: ${{ steps.PR.outputs.pr }}
-            # Direct access to common PR properties
-            prUrl: ${{ steps.PR.outputs.pr_url }}
-            prTitle: ${{ steps.PR.outputs.pr_title }}
-            prBody: ${{ steps.PR.outputs.pr_body }}
-            prCreatedAt: ${{ steps.PR.outputs.pr_created_at }}
-            prMergedAt: ${{ steps.PR.outputs.pr_merged_at }}
-            prClosedAt: ${{ steps.PR.outputs.pr_closed_at }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get PR
+        uses: ./
+        id: getPR
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Display PR properties
+        run: |
+          echo "The PR Number is ${{ steps.getPR.outputs.number }}"
+          echo "The PR Title is ${{ steps.getPR.outputs.pr_title }}"
+          echo "The PR Body is ${{ steps.getPR.outputs.pr_body }}"
+          echo "The PR Url is ${{ steps.getPR.outputs.pr_url }}"
+          echo "The PR Created_At is ${{ steps.getPR.outputs.pr_created_at }}"
+          echo "The PR Merged_At is ${{ steps.getPR.outputs.pr_merged_at }}"
+          echo "The PR Closed_At is ${{ steps.getPR.outputs.pr_closed_at }}"
       - name: Deploy to ${{env.DEPLOY_TYPE}}
         run: |
           echo "Deploying to ${{env.DEPLOY_TYPE}}..."
