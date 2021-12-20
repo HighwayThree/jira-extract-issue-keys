@@ -21,7 +21,7 @@ async function extractJiraKeysFromCommit() {
         });
         if (isPullRequest) {
             let resultArr = [];
-            // console.log("is pull request...");
+            console.log("is pull request... test test");  //Would this work?
             const owner = payload.repository.owner.login;
             const repo = payload.repository.name;
             const prNum = payload.number;
