@@ -1,0 +1,92 @@
+name: Jira
+
+on:
+  pull_request:
+    branches:
+      - 'testing'
+
+jobs:
+  deploy_jira_github:
+    name: jira with github test
+    runs-on: ubuntu-latest
+    steps:  
+      # https://stackoverflow.com/questions/60916931/github-action-does-the-if-have-an-else
+      # - name: Assign Production Deploy State
+      #   if: ${{ endsWith(github.ref, 'master') }} 
+      #   run: |
+      #     export DEPLOY_TYPE='production'       
+      #     echo "DEPLOY_TYPE=$DEPLOY_TYPE" >> $GITHUB_ENV
+      # - name: Assign Staging Deploy State
+      #   if: ${{ !endsWith(github.ref, 'master') }} 
+      #   run: |
+      #     export DEPLOY_TYPE='staging'
+      #     echo "DEPLOY_TYPE=$DEPLOY_TYPE" >> $GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get PR
+        uses: ./
+        id: getPR
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Display PR properties
+        run: |
+          echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
+          echo "The PR Number is ${{ steps.getPR.outputs.number }}"
+          echo "The PR Title is ${{ steps.getPR.outputs.pr_title }}"
+          echo "The PR Body is ${{ steps.getPR.outputs.pr_body }}"
+          echo "The PR Url is ${{ steps.getPR.outputs.pr_url }}"
+          echo "The PR Created_At is ${{ steps.getPR.outputs.pr_created_at }}"
+          echo "The PR Merged_At is ${{ steps.getPR.outputs.pr_merged_at }}"
+          echo "The PR Closed_At is ${{ steps.getPR.outputs.pr_closed_at }}"
+      - name: Deploy to ${{env.DEPLOY_TYPE}}
+        run: |
+          echo "Deploying to ${{env.DEPLOY_TYPE}}..."
+          echo "github.event_name: ${{github.event_name}}"
+          echo "github.ref: ${{github.ref}}"
+          echo "github.ref_name: ${{github.ref_name}}"
+          echo "github.head_ref: ${{github.head_ref}}"
+          echo "github.base_ref: ${{github.base_ref}}"
+          echo "DEPLOY_TYPE: ${{env.DEPLOY_TYPE}}"
+          echo "DEPLOY_STATE=successful"  >> $GITHUB_ENV      
+      - name: Parse Jira Keys from All Commits
+        id: jira_keys
+        if: always()
+        uses: birdly/jira-extract-issue-keys@testing
+        with:
+          is-pull-request: ${{ github.event_name == 'pull_request' }}
+          parse-all-commits: ${{ github.event_name == 'push' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Confirm Deploy State and Jira Key Values
+        if: always()
+        run: |
+          echo "DEPLOY_STATE: ${{env.DEPLOY_STATE}}"
+          echo "Jira Keys: ${{steps.jira_keys.outputs.jira-keys}}"
+      # - name: Push Deployment Info to Jira
+      #   if: steps.jira_keys.outputs.jira-keys != ''
+      #   id: push_deployment_info_to_jira
+      #   uses: HighwayThree/jira-upload-deployment-info@master
+      #   with:
+      #     client-id: '${{ secrets.JIRA_CLIENT_ID }}'
+      #     client-secret: '${{ secrets.JIRA_CLIENT_SECRET }}'
+      #     cloud-instance-base-url: '${{ secrets.JIRA_CLOUD_INSTANCE_BASE_URL }}'
+      #     deployment-sequence-number: '${{ github.run_id }}'
+      #     update-sequence-number: '${{ github.run_id }}'
+      #     issue-keys: "${{ steps.jira_keys.outputs.jira-keys }}"
+      #     display-name: '${{github.head_ref}}' # Change this PE-162
+      #     url: "${{github.event.repository.url}}/actions/runs/${{github.run_id}}"
+      #     description: "Test Deployment"
+      #     last-updated: '${{github.event.head_commit.timestamp}}'
+      #     label: 'Test Deployment Label'
+      #     state: '${{env.DEPLOY_STATE}}'
+      #     pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
+      #     pipeline-display-name: '${{ github.workflow }} (#${{ github.run_number }})'
+      #     pipeline-url: '${{github.event.repository.url}}/actions/runs/${{github.run_id}}'
+      #     environment-id: '${{github.ref}}'         
+      #     environment-display-name: '${{env.DEPLOY_TYPE}}'     
+      #     environment-type: '${{env.DEPLOY_TYPE}}'              # [production, staging, testing, development, unmapped]
+      # - name: Confirm Jira Deploy Output
+      #   if: success()
+      #   run: |
+      #     echo "Jira Upload Deploy Info response: ${{steps.push_deployment_info_to_jira.outputs.response}}"          
+    
