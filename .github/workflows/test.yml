@@ -1,4 +1,4 @@
-name: Jira
+name: Jira Test
 
 on:
   pull_request:
