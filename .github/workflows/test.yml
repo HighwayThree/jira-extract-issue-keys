@@ -30,6 +30,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Display PR properties
         run: |
+          echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
           echo "The PR Number is ${{ steps.getPR.outputs.number }}"
           echo "The PR Title is ${{ steps.getPR.outputs.pr_title }}"
           echo "The PR Body is ${{ steps.getPR.outputs.pr_body }}"
