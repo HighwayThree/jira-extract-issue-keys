@@ -17,5 +17,5 @@ outputs:
   jira-keys:
     description: 'Jira keys that were found in input string(commit-message) in commad delimited format'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'index.js'
