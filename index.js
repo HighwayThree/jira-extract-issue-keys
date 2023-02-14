@@ -4,6 +4,16 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const matchAll = require("match-all");
 const Octokit = require("@octokit/rest");
+
+const os = require("os");
+const fs = require("fs");
+
+function setOutput(key, value) {
+  // Temporary hack until core actions library catches up with github new recommendations
+  const output = process.env["GITHUB_OUTPUT"];
+  fs.appendFileSync(output, `${key}=${value}${os.EOL}`);
+}
+
 async function extractJiraKeysFromCommit() {
   try {
     const regex = /((([A-Z]+)|([0-9]+))+-\d+)/g;
@@ -67,14 +77,14 @@ async function extractJiraKeysFromCommit() {
         });
       });
       const result = resultArr.join(",");
-      core.setOutput("jira-keys", result);
+      setOutput("jira-keys", result);
     } else {
       // console.log("not a pull request");
       if (commitMessage) {
         // console.log("commit-message input val provided...");
         const matches = matchAll(commitMessage, regex).toArray();
         const result = matches.join(",");
-        core.setOutput("jira-keys", result);
+        setOutput("jira-keys", result);
       } else {
         // console.log("no commit-message input val provided...");
         const payload = github.context.payload;
@@ -93,7 +103,7 @@ async function extractJiraKeysFromCommit() {
             });
           });
           const result = resultArr.join(",");
-          core.setOutput("jira-keys", result);
+          setOutput("jira-keys", result);
         } else {
           // console.log("parse-all-commits input val is false");
           // console.log("head_commit: ", payload.head_commit);
@@ -102,7 +112,7 @@ async function extractJiraKeysFromCommit() {
             regex
           ).toArray();
           const result = matches.join(",");
-          core.setOutput("jira-keys", result);
+          setOutput("jira-keys", result);
         }
       }
     }
