@@ -19,6 +19,9 @@ async function extractJiraKeysFromCommit() {
         const octokit = new Octokit({
             auth: token,
         });
+        function removeDuplicateJiraKeys(data) {
+            return data.filter((item, index) => data.indexOf(item) === index);
+        }
         if (isPullRequest) {
             let resultArr = [];
             // console.log("is pull request...");
@@ -51,7 +54,8 @@ async function extractJiraKeysFromCommit() {
             if (commitMessage) {
                 // console.log("commit-message input val provided...");
                 const matches = matchAll(commitMessage, regex).toArray();
-                const result = matches.join(',');
+                const uniqueMatches = removeDuplicateJiraKeys(matches);
+                const result = uniqueMatches.join(',');
                 core.setOutput("jira-keys", result);
             }
             else {
